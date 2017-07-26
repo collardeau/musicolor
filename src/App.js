@@ -1,19 +1,54 @@
 import React from 'react';
-import { compose, withState, withHandlers } from 'recompose';
+import { compose, withProps } from 'recompose';
 import './App.css';
 
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+const oscillator = audioCtx.createOscillator();
+const gainNode = audioCtx.createGain();
+gainNode.gain.value = 0;
+oscillator.frequency.value = 110;
+oscillator.connect(gainNode);
+gainNode.connect(audioCtx.destination);
+oscillator.start();
+
 const enhance = compose(
-  withState('volume', 'setVolume', 0),
-  withHandlers({
-    mute: props => () => {
-      props.setVolume(0);
+  withProps({
+    changeTone: hz => {
+      oscillator.frequency.value = hz;
+    },
+    changeGain: value => {
+      gainNode.gain.value = value;
+    },
+    mute: () => {
+      gainNode.gain.value = 0;
     }
   })
 );
 
-const App = enhance(({ volume }) =>
+const App = enhance(({ changeTone, changeGain, mute }) =>
   <div>
-    Volume: {volume}
+    <button
+      onClick={() => {
+        changeGain(0.3);
+      }}
+    >
+      Start
+    </button>
+    <button
+      onClick={() => {
+        mute();
+      }}
+    >
+      Mute
+    </button>
+    <button
+      onClick={() => {
+        changeTone(220);
+      }}
+    >
+      Change Tone
+    </button>
   </div>
 );
 
