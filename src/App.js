@@ -28,27 +28,24 @@ const enhance = compose(
 
 const App = enhance(({ changeTone, changeGain, mute }) =>
   <div>
-    <button
-      onClick={() => {
-        changeGain(0.3);
+    <h3>Theramin</h3>
+    <div>Mouse from left to right for higher pitches</div>
+    <div
+      style={{
+        width: '100vw',
+        height: '100px',
+        border: '1px solid black'
       }}
-    >
-      Start
-    </button>
-    <button
-      onClick={() => {
+      onMouseEnter={e => {
+        changeGain(0.2);
+      }}
+      onMouseMove={e => {
+        changeTone(e.clientX);
+      }}
+      onMouseLeave={() => {
         mute();
       }}
-    >
-      Mute
-    </button>
-    <button
-      onClick={() => {
-        changeTone(220);
-      }}
-    >
-      Change Tone
-    </button>
+    />
   </div>
 );
 
