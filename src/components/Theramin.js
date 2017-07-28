@@ -11,9 +11,13 @@ const Theramin = compose(
         hz: !i ? start : notes[i - 1].hz * intervalRatio
       };
     });
+    const range = notes[notes.length - 1].hz - notes[0].hz;
     return {
       ...props,
-      notes
+      notes: notes.map(note => ({
+        ...note,
+        octaveRatio: 1 / range * note.hz - 1
+      }))
     };
   })
 )(props => {
@@ -33,9 +37,10 @@ const Theramin = compose(
             changeFrequency(note.hz);
           }}
           style={{
-            border: '1px solid black',
+            // border: '1px solid black',
             width: `${1 / 12 * 100}%`,
-            textAlign: 'center'
+            textAlign: 'center',
+            backgroundColor: `hsl(${note.octaveRatio * 360}, 50%, 50%)`
           }}
         >
           {i + 1}
