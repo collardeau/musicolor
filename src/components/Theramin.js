@@ -1,7 +1,8 @@
 import React from 'react';
-import { compose, mapProps } from 'recompose';
+import { compose, mapProps, withState } from 'recompose';
 
 const Theramin = compose(
+  withState('activeNote', 'setActiveNote', 0),
   mapProps(props => {
     const { start } = props;
     const intervalRatio = 1.059463636; // western music
@@ -34,16 +35,20 @@ const Theramin = compose(
         <div
           key={note.hz}
           onMouseMove={() => {
-            changeFrequency(note.hz);
+            setFrequency(note.hz);
+            setActiveNote(i + 1);
           }}
           style={{
-            // border: '1px solid black',
+            borderRight: '1px solid #ccc',
             width: `${1 / 12 * 100}%`,
             textAlign: 'center',
-            backgroundColor: `hsl(${note.octaveRatio * 360}, 50%, 50%)`
+            backgroundColor: `hsl(${note.octaveRatio * 360}, ${i + 1 === activeNote
+              ? 50
+              : 30}%, 50%)`,
+            fontSize: '1.3em'
           }}
         >
-          {i + 1}
+          {i % 2 === 0 ? '.' : null}
         </div>
       )}
     </div>
