@@ -8,9 +8,17 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 
 const PlayArea = ({ children, setGain }) =>
-  <div onMouseEnter={() => setGain(0.5)} onMouseLeave={() => setGain(0)}>
+  <div onMouseLeave={() => setGain(0)}>
     {children}
   </div>;
+
+const NeutralZone = props =>
+  <div
+    style={{
+      backgroundColor: '#ccc',
+      height: '7vh'
+    }}
+  />;
 
 const App = compose(
   withState('gain', 'setGain', 0),
@@ -22,7 +30,9 @@ const App = compose(
       <Oscillator audioCtx={audioCtx} gain={gain} frequency={frequency} />
       <h3>Musicolor</h3>
       <PlayArea setGain={setGain}>
-        <Theramin start={110} changeFrequency={setFrequency} />
+        <NeutralZone />
+        <Theramin start={110} setFrequency={setFrequency} onEnter={() => setGain(0.5)} />
+        <NeutralZone />
       </PlayArea>
     </main>
   );

@@ -22,13 +22,14 @@ const Theramin = compose(
     };
   })
 )(props => {
-  const { notes, changeFrequency } = props;
+  const { notes, setFrequency, onEnter, activeNote, setActiveNote } = props;
   return (
     <div
+      onMouseEnter={onEnter}
       style={{
         display: 'flex',
         width: '100%',
-        height: '10vh'
+        height: '7vh'
       }}
     >
       {notes.map((note, i) =>
