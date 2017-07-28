@@ -16,7 +16,7 @@ const NeutralZone = props =>
   <div
     style={{
       backgroundColor: '#ccc',
-      height: '7vh'
+      height: `${props.small ? 1 : 10}vh`
     }}
   />;
 
@@ -32,7 +32,7 @@ const App = compose(
       <PlayArea setGain={setGain}>
         <NeutralZone />
         <Theramin start={110} setFrequency={setFrequency} onEnter={() => setGain(0.5)} />
-        <NeutralZone />
+        <NeutralZone small />
       </PlayArea>
     </main>
   );
