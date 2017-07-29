@@ -21,7 +21,7 @@ const noteColor = note => {
 
 export const StyledNote = styled.div`
   border-right: 1px solid #ccc;
-  width: ${1 / 12 * 100}%;
+  width: 60px;
   text-align: center;
   font-size: 1.3em;
   background-color: ${noteColor};

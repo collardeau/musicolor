@@ -13,22 +13,25 @@ const Theramin = compose(
   }),
   mapProps(props => {
     // todo: withPropsOnChange? dont recalculate notes too many times
-    const { start, scale } = props;
+    const { unison, scale, start } = props;
     const intervalRatio = 1.0594631; // western music
     let notes = [];
     [...Array(13)].forEach((_, i) => {
       notes[i] = {
-        hz: !i ? start : notes[i - 1].hz * intervalRatio
+        hz: !i ? unison : notes[i - 1].hz * intervalRatio
       };
     });
     const range = notes[notes.length - 1].hz - notes[0].hz;
     return {
       ...props,
-      notes: notes.map((note, i) => ({
-        ...note,
-        octaveRatio: 1 / range * note.hz - 1,
-        muted: scale === 'major' && (i === 1 || i === 3 || i === 6 || i === 8 || i === 10)
-      }))
+      notes: notes
+        .map((note, i) => ({
+          ...note,
+          octaveRatio: 1 / range * note.hz - 1,
+          muted:
+            scale === 'major' && (i === 1 || i === 3 || i === 6 || i === 8 || i === 10)
+        }))
+        .slice(start)
     };
   }),
   mapProps(omit(['setFrequency', 'setActiveNote', 'start']))
@@ -39,6 +42,7 @@ const Theramin = compose(
       {notes.map((note, i) =>
         <StyledNote
           key={i}
+          index={i}
           muted={note.muted}
           degree={note.octaveRatio * 360}
           isActive={activeNote === i + 1}
