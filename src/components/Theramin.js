@@ -12,6 +12,7 @@ const Theramin = compose(
     }
   }),
   mapProps(props => {
+    // todo: withPropsOnChange? dont recalculate notes too many times
     const { start, scale } = props;
     const intervalRatio = 1.0594631; // western music
     let notes = [];
