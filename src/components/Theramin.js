@@ -13,7 +13,7 @@ const Theramin = compose(
   }),
   mapProps(props => {
     const { start, scale } = props;
-    const intervalRatio = 1.059463636; // western music
+    const intervalRatio = 1.0594631; // western music
     let notes = [];
     [...Array(13)].forEach((_, i) => {
       notes[i] = {
