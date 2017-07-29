@@ -1,5 +1,5 @@
 import React from 'react';
-import { compose, withState } from 'recompose';
+import { compose, withState, withHandlers } from 'recompose';
 import Oscillator from './components/Oscillator';
 import Theramin from './components/Theramin';
 import { AppContainer, Select } from './components/styled';
@@ -14,7 +14,8 @@ const PlayArea = ({ children, setGain }) =>
     style={{
       backgroundColor: '#ccc',
       padding: '0 1vw',
-      margin: '2vh 0'
+      margin: '2vh 0',
+      width: '100%'
     }}
   >
     {children}
@@ -31,9 +32,16 @@ const NeutralZone = props =>
 const App = compose(
   withState('gain', 'setGain', 0),
   withState('frequency', 'setFrequency', 110),
-  withState('scale', 'setScale', 'chromatic')
+  withState('colorViz', 'setColorViz', '#ccc'),
+  withState('scale', 'setScale', 'chromatic'), // or 'major'
+  withHandlers({
+    changeTone: props => (hz, color) => {
+      props.setFrequency(hz);
+      props.setColorViz(color);
+    }
+  })
 )(props => {
-  const { gain, frequency, setGain, setFrequency, setScale, scale } = props;
+  const { gain, frequency, setGain, changeTone, setScale, scale, colorViz } = props;
   return (
     <AppContainer>
       <Oscillator audioCtx={audioCtx} gain={gain} frequency={frequency} />
@@ -49,10 +57,18 @@ const App = compose(
         </Select>
       </div>
       <PlayArea setGain={setGain}>
+        <NeutralZone small />
+        <div
+          style={{
+            backgroundColor: colorViz,
+            height: '2px',
+            margin: '2vh 0'
+          }}
+        />
         <NeutralZone />
         <Theramin
-          start={110}
-          setFrequency={setFrequency}
+          unison={110}
+          changeTone={changeTone}
           onEnter={() => setGain(0.5)}
           scale={scale}
         />
