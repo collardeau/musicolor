@@ -11,14 +11,20 @@ export const Select = styled.select`
 `;
 
 const neutralBg = 'hsl(0, 0%, 70%)';
+const noteColor = note => {
+  if (note.muted) return neutralBg;
+  const hue = note.degree;
+  const saturation = note.isActive ? 50 : 30;
+  const lightness = 50;
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+};
 
 export const StyledNote = styled.div`
   border-right: 1px solid #ccc;
   width: ${1 / 12 * 100}%;
   text-align: center;
   font-size: 1.3em;
-  background-color: ${props =>
-    props.muted ? neutralBg : `hsl(${props.degree}, ${props.isActive ? 50 : 30}%, 50%)`};
+  background-color: ${noteColor};
 `;
 
 export const StyledTheramin = styled.div`
