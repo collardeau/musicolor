@@ -33,6 +33,7 @@ const NeutralZone = props =>
   />;
 
 const App = compose(
+  withState('layout', 'setLayout', 'flat'),
   withState('gain', 'setGain', 0),
   withState('frequency', 'setFrequency', 110),
   withState('colorViz', 'setColorViz', '#ccc'),
@@ -52,24 +53,48 @@ const App = compose(
     setScale,
     scale,
     colorViz,
-    setColorViz
+    setColorViz,
+    layout,
+    setLayout
   } = props;
   return (
     <AppContainer>
       <Oscillator audioCtx={audioCtx} gain={gain} frequency={frequency} />
       <h1>Musicolor</h1>
+      <div style={{ marginBottom: '1vh' }}>
+        <Select
+          onChange={e => {
+            setLayout(e.target.value);
+          }}
+        >
+          <option value="flat">Flat Layout</option>
+          <option value="guitar">Guitar Layout</option>
+        </Select>
+      </div>
       <div>
         <Select
           onChange={e => {
             setScale(e.target.value);
           }}
         >
-          <option value="chromatic">Chromatic Scale (All 12 notes)</option>
+          <option value="chromatic">Chromatic Scale (All notes)</option>
           <option value="major">Major Scale (7 notes)</option>
         </Select>
       </div>
       <PlayArea setGain={setGain} setColorViz={setColorViz}>
         <NeutralZone small />
+        {layout === 'guitar' &&
+          <div>
+            <Theramin
+              unison={110}
+              changeTone={changeTone}
+              onEnter={() => setGain(0.5)}
+              scale={scale}
+              start={4}
+              showMarkers={true}
+            />{' '}
+            <NeutralZone />
+          </div>}
         <div
           style={{
             backgroundColor: colorViz,
@@ -83,6 +108,7 @@ const App = compose(
           changeTone={changeTone}
           onEnter={() => setGain(0.5)}
           scale={scale}
+          showMarkers={layout === 'guitar'}
         />
         <NeutralZone small />
       </PlayArea>

@@ -54,10 +54,10 @@ const Theramin = compose(
   }),
   mapProps(omit(['setFrequency', 'start']))
 )(props => {
-  const { notes, onEnter, changeNote, setActiveNote } = props;
+  const { notes, onEnter, changeNote, setActiveNote, showMarkers } = props;
   return (
     <StyledTheramin onMouseEnter={onEnter}>
-      {notes.map(note =>
+      {notes.map((note, i) =>
         <StyledNote
           key={note.interval}
           color={note.color}
@@ -70,7 +70,19 @@ const Theramin = compose(
           onMouseLeave={() => {
             setActiveNote(0);
           }}
-        />
+        >
+          {showMarkers &&
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '10px',
+                left: '29px',
+                fontSize: '1.3em'
+              }}
+            >
+              {(i + 1) % 2 ? '.' : ''}
+            </div>}
+        </StyledNote>
       )}
     </StyledTheramin>
   );
