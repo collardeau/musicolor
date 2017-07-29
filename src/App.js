@@ -8,9 +8,12 @@ import './App.css';
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 
-const PlayArea = ({ children, setGain }) =>
+const PlayArea = ({ children, setGain, setColorViz }) =>
   <div
-    onMouseLeave={() => setGain(0)}
+    onMouseLeave={() => {
+      setGain(0);
+      setColorViz('#ccc');
+    }}
     style={{
       backgroundColor: '#ccc',
       padding: '0 1vw',
@@ -25,7 +28,7 @@ const NeutralZone = props =>
   <div
     style={{
       backgroundColor: '#ccc',
-      height: `${props.small ? 1 : 10}vh`
+      height: `${props.small ? 1 : 3}vh`
     }}
   />;
 
@@ -41,7 +44,16 @@ const App = compose(
     }
   })
 )(props => {
-  const { gain, frequency, setGain, changeTone, setScale, scale, colorViz } = props;
+  const {
+    gain,
+    frequency,
+    setGain,
+    changeTone,
+    setScale,
+    scale,
+    colorViz,
+    setColorViz
+  } = props;
   return (
     <AppContainer>
       <Oscillator audioCtx={audioCtx} gain={gain} frequency={frequency} />
@@ -56,7 +68,7 @@ const App = compose(
           <option value="major">Major Scale (7 notes)</option>
         </Select>
       </div>
-      <PlayArea setGain={setGain}>
+      <PlayArea setGain={setGain} setColorViz={setColorViz}>
         <NeutralZone small />
         <div
           style={{

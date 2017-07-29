@@ -64,7 +64,7 @@ const Theramin = compose(
             setActiveNote(0);
           }}
         >
-          {i % 2 === 0 ? '.' : null}
+          {i % 2 === 0 ? '' : null}
         </StyledNote>
       )}
     </StyledTheramin>
