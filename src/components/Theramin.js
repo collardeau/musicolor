@@ -6,7 +6,7 @@ import { StyledNote, StyledTheramin } from './styled';
 const Theramin = compose(
   withState('activeNote', 'setActiveNote', 0),
   withHandlers({
-    changeNote: ({ changeTone, setActiveNote }) => (hz, color) => {
+    changeNote: ({ changeTone }) => (hz, color) => {
       changeTone(hz, color);
     }
   }),
@@ -16,16 +16,18 @@ const Theramin = compose(
     const intervalRatio = 1.0594631; // western music
     let notes = [];
     [...Array(13)].forEach((_, i) => {
+      const lastNote = notes[notes.length - 1];
       notes[i] = {
-        hz: !i ? unison : notes[i - 1].hz * intervalRatio
+        hz: !i ? unison : lastNote.hz * intervalRatio,
+        interval: i + 1
       };
     });
     const range = notes[notes.length - 1].hz - notes[0].hz;
     const neutralBg = 'hsl(0, 0%, 70%)';
-    const getNoteColor = (note, i) => {
+    const getNoteColor = note => {
       if (note.muted) return neutralBg;
       const hue = note.octaveRatio * 360;
-      const saturation = activeNote === i + 1 ? 50 : 30;
+      const saturation = activeNote === note.interval + 1 ? 50 : 30;
       const lightness = 50;
       return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     };
@@ -36,36 +38,39 @@ const Theramin = compose(
           ...note,
           octaveRatio: 1 / range * note.hz - 1,
           muted:
-            scale === 'major' && (i === 1 || i === 3 || i === 6 || i === 8 || i === 10)
+            scale === 'major' &&
+            (note.interval === 2 ||
+              note.interval === 4 ||
+              note.interval === 7 ||
+              note.interval === 9 ||
+              note.interval === 11)
         }))
-        .map((note, i) => ({
+        .map(note => ({
           ...note,
-          color: getNoteColor(note, i)
+          color: getNoteColor(note)
         }))
-        .slice(start)
+        .slice(start || 0)
     };
   }),
   mapProps(omit(['setFrequency', 'start']))
 )(props => {
-  const { notes, onEnter, activeNote, changeNote, setActiveNote } = props;
+  const { notes, onEnter, changeNote, setActiveNote } = props;
   return (
     <StyledTheramin onMouseEnter={onEnter}>
-      {notes.map((note, i) =>
+      {notes.map(note =>
         <StyledNote
-          key={i}
+          key={note.interval}
           color={note.color}
           onMouseMove={() => {
             if (!note.muted) {
               changeNote(note.hz, note.color);
-              setActiveNote(i + 1);
+              setActiveNote(note.interval + 1);
             }
           }}
           onMouseLeave={() => {
             setActiveNote(0);
           }}
-        >
-          {i % 2 === 0 ? '' : null}
-        </StyledNote>
+        />
       )}
     </StyledTheramin>
   );
