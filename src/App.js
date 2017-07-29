@@ -28,7 +28,7 @@ const NeutralZone = props =>
   <div
     style={{
       backgroundColor: '#ccc',
-      height: `${props.small ? 1 : 3}vh`
+      height: `${props.small ? 1 : 2.5}vh`
     }}
   />;
 
