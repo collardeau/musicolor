@@ -1,9 +1,16 @@
 import React from 'react';
-import { compose, mapProps, withState } from 'recompose';
+import omit from 'ramda/src/omit';
+import { compose, mapProps, withState, withHandlers } from 'recompose';
 import { StyledNote, StyledTheramin } from './styled';
 
 const Theramin = compose(
   withState('activeNote', 'setActiveNote', 0),
+  withHandlers({
+    changeNote: ({ setFrequency, setActiveNote }) => (hz, index) => {
+      setFrequency(hz);
+      setActiveNote(index);
+    }
+  }),
   mapProps(props => {
     const { start, scale } = props;
     const intervalRatio = 1.059463636; // western music
@@ -22,9 +29,10 @@ const Theramin = compose(
         muted: scale === 'major' && (i === 1 || i === 3 || i === 6 || i === 8 || i === 10)
       }))
     };
-  })
+  }),
+  mapProps(omit(['setFrequency', 'setActiveNote', 'start']))
 )(props => {
-  const { notes, setFrequency, onEnter, activeNote, setActiveNote } = props;
+  const { notes, onEnter, activeNote, changeNote } = props;
   return (
     <StyledTheramin onMouseEnter={onEnter}>
       {notes.map((note, i) =>
@@ -35,8 +43,7 @@ const Theramin = compose(
           isActive={activeNote === i + 1}
           onMouseMove={() => {
             if (!note.muted) {
-              setFrequency(note.hz);
-              setActiveNote(i + 1);
+              changeNote(note.hz, i + 1);
             }
           }}
         >
