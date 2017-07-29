@@ -1,5 +1,6 @@
 import React from 'react';
 import { compose, mapProps, withState } from 'recompose';
+import { StyledNote, StyledTheramin } from './styled';
 
 const Theramin = compose(
   withState('activeNote', 'setActiveNote', 0),
@@ -25,37 +26,24 @@ const Theramin = compose(
 )(props => {
   const { notes, setFrequency, onEnter, activeNote, setActiveNote } = props;
   return (
-    <div
-      onMouseEnter={onEnter}
-      style={{
-        display: 'flex',
-        width: '100%',
-        height: '7vh'
-      }}
-    >
+    <StyledTheramin onMouseEnter={onEnter}>
       {notes.map((note, i) =>
-        <div
-          key={note.hz}
+        <StyledNote
+          key={i}
+          muted={note.muted}
+          degree={note.octaveRatio * 360}
+          isActive={activeNote === i + 1}
           onMouseMove={() => {
             if (!note.muted) {
               setFrequency(note.hz);
               setActiveNote(i + 1);
             }
           }}
-          style={{
-            borderRight: '1px solid #ccc',
-            width: `${1 / 12 * 100}%`,
-            textAlign: 'center',
-            backgroundColor: note.muted
-              ? 'hsl(0, 0%, 70%)'
-              : `hsl(${note.octaveRatio * 360}, ${i + 1 === activeNote ? 50 : 30}%, 50%)`,
-            fontSize: '1.3em'
-          }}
         >
           {i % 2 === 0 ? '.' : null}
-        </div>
+        </StyledNote>
       )}
-    </div>
+    </StyledTheramin>
   );
 });
 
