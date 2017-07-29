@@ -28,9 +28,10 @@ const NeutralZone = props =>
 
 const App = compose(
   withState('gain', 'setGain', 0),
-  withState('frequency', 'setFrequency', 110)
+  withState('frequency', 'setFrequency', 110),
+  withState('scale', 'setScale', 'chromatic')
 )(props => {
-  const { gain, frequency, setGain, setFrequency } = props;
+  const { gain, frequency, setGain, setFrequency, setScale, scale } = props;
   return (
     <main
       style={{
@@ -46,13 +47,22 @@ const App = compose(
             width: '300px',
             height: '50px'
           }}
+          onChange={e => {
+            setScale(e.target.value);
+          }}
         >
-          <option>Chromatic Scale (All 12 notes)</option>
+          <option value="chromatic">Chromatic Scale (All 12 notes)</option>
+          <option value="major">Major Scale (7 notes)</option>
         </select>
       </div>
       <PlayArea setGain={setGain}>
         <NeutralZone />
-        <Theramin start={110} setFrequency={setFrequency} onEnter={() => setGain(0.5)} />
+        <Theramin
+          start={110}
+          setFrequency={setFrequency}
+          onEnter={() => setGain(0.5)}
+          scale={scale}
+        />
         <NeutralZone small />
       </PlayArea>
     </main>
