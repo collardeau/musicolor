@@ -2,6 +2,7 @@ import React from 'react';
 import { compose, withState } from 'recompose';
 import Oscillator from './components/Oscillator';
 import Theramin from './components/Theramin';
+import { AppContainer, Select } from './components/styled';
 import './App.css';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -12,7 +13,8 @@ const PlayArea = ({ children, setGain }) =>
     onMouseLeave={() => setGain(0)}
     style={{
       backgroundColor: '#ccc',
-      padding: '0 1vw'
+      padding: '0 1vw',
+      margin: '2vh 0'
     }}
   >
     {children}
@@ -33,27 +35,18 @@ const App = compose(
 )(props => {
   const { gain, frequency, setGain, setFrequency, setScale, scale } = props;
   return (
-    <main
-      style={{
-        maxWidth: '800px',
-        margin: '0 auto'
-      }}
-    >
+    <AppContainer>
       <Oscillator audioCtx={audioCtx} gain={gain} frequency={frequency} />
-      <h3>Musicolor</h3>
-      <div style={{ fontSize: '2em', marginBottom: '2vh' }}>
-        <select
-          style={{
-            width: '300px',
-            height: '50px'
-          }}
+      <h1>Musicolor</h1>
+      <div>
+        <Select
           onChange={e => {
             setScale(e.target.value);
           }}
         >
           <option value="chromatic">Chromatic Scale (All 12 notes)</option>
           <option value="major">Major Scale (7 notes)</option>
-        </select>
+        </Select>
       </div>
       <PlayArea setGain={setGain}>
         <NeutralZone />
@@ -65,7 +58,7 @@ const App = compose(
         />
         <NeutralZone small />
       </PlayArea>
-    </main>
+    </AppContainer>
   );
 });
 
