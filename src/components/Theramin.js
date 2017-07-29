@@ -28,7 +28,7 @@ const Theramin = compose(
       if (note.muted) return neutralBg;
       const hue = note.octaveRatio * 360;
       const saturation = activeNote === note.interval + 1 ? 50 : 30;
-      const lightness = 50;
+      const lightness = note.interval === 13 ? 66 : 50;
       return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     };
     return {
