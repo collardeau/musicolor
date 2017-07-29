@@ -16,6 +16,7 @@ export const StyledNote = styled.div`
   width: 60px;
   text-align: center;
   background-color: ${props => props.color};
+  border-radius: 5px;
 `;
 
 export const StyledTheramin = styled.div`
