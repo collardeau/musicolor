@@ -90,7 +90,7 @@ const App = compose(
               changeTone={changeTone}
               onEnter={() => setGain(0.5)}
               scale={scale}
-              start={4}
+              start={5}
               showMarkers={true}
             />{' '}
             <NeutralZone />
