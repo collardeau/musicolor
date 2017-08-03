@@ -5,7 +5,7 @@ const Oscillator = compose(
   withState('gainNode', 'setGainNode', null),
   lifecycle({
     componentDidMount() {
-      console.log('oscillator mounts');
+      // console.log('oscillator mounts');
       const { audioCtx, setGainNode, setOscillator, gain, frequency } = this.props;
       const oscillator = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
