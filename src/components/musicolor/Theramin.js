@@ -1,7 +1,7 @@
 import React from 'react';
 import omit from 'ramda/src/omit';
 import { compose, mapProps, withState, withHandlers } from 'recompose';
-import { StyledNote, StyledTheramin } from './styled';
+import { StyledNote, StyledTheramin } from '../styled';
 
 const Theramin = compose(
   withState('activeNote', 'setActiveNote', 0),

@@ -2,7 +2,7 @@ import React from 'react';
 import { compose, withState, withHandlers } from 'recompose';
 import Oscillator from './Oscillator';
 import Theramin from './Theramin';
-import { Select } from './styled';
+import { Select } from '../styled';
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();

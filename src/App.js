@@ -1,6 +1,6 @@
 import React from 'react';
 import { compose } from 'recompose';
-import Musicolor from './components/Musicolor';
+import Musicolor from './components/musicolor/Musicolor';
 import { AppContainer } from './components/styled';
 import './App.css';
 
