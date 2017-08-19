@@ -1,84 +1,43 @@
 import Tone from 'tone';
+import * as strums from './strums';
+import { getIntervals, makePart, down, up } from './utils/toneUtils';
 
-const FMsynth = new Tone.AMSynth().toMaster();
-const { Transport } = Tone;
-Tone.Transport.loop = true;
+export function justLikeHeaven(
+  { musicKey = 'A', scale = 'major', startOct = '4', bpm = 151 } = {},
+  ints = getIntervals(musicKey, scale, startOct)
+) {
+  const { d_d_d_d_, d_d_dudu, _ud_dud_, d_du_ud_, d_dudu_u, dudu_ud_ } = strums;
 
-function scheduleNote(note, duration, when) {
-  Transport.schedule(time => {
-    FMsynth.triggerAttackRelease(note, duration, time);
-  }, when);
-}
+  const countDown = makePart([
+    d_d_d_d_(0, [down(ints[1]), ints[1], down(ints[1]), up(ints[1])])
+  ]);
 
-const notesList = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
-const isMajorInterval = (_, i) =>
-  i === 0 || i === 2 || i === 4 || i === 5 || i === 7 || i === 9 || i === 11 || i === 12;
+  const verse = makePart([
+    d_d_dudu(0, ints[1]),
+    _ud_dud_(1, ints[5]),
+    d_d_dudu(2, ints[2]),
+    _ud_dud_(3, ints[4])
+  ]);
 
-function getIntervals(musicKey = 'C', scale = 'major', octave = '4') {
-  const index = notesList.findIndex(n => n === musicKey);
-  return [...notesList.slice(index), ...notesList.slice(0, index)]
-    .filter(isMajorInterval) // todo: for other scales too
-    .map(n => n + octave)
-    .reduce(
-      (acc, next, i) => ({
-        ...acc,
-        [i + 1]: next
-      }),
-      {}
-    );
-}
+  const melodyAsc = makePart([
+    d_du_ud_(0, [up(ints[3]), up(ints[3]), up(ints[2]), up(ints[2]), up(ints[1])]),
+    d_du_ud_(1, [ints[7], ints[7], ints[6], ints[6], ints[5]]),
+    d_dudu_u(2, [ints[4], ints[4], ints[4], ints[3], ints[4], ints[2]]),
+    dudu_ud_(3, [ints[2], ints[2], ints[2], ints[1], ints[1], ints[2]])
+  ]);
 
-const updateOctave = (num, note) =>
-  !num ? note : note.replace(/.$/, +note.substr(-1) + num);
+  verse.loop = 2;
+  verse.loopEnd = '4m';
 
-const q = (note, when, octave = 0) => {
-  note = updateOctave(octave, note);
-  scheduleNote(note, '4n', when);
-};
+  countDown.start('0m');
+  verse.start('1m').stop('9m');
+  melodyAsc.start('9m').stop('13m');
+  melodyAsc.start('13m');
 
-const h = (note, when, octave = 0) => {
-  note = updateOctave(octave, note);
-  scheduleNote(note, '2n', when);
-};
-
-export function frere({ musicKey = 'C', scale = 'major', startOct = '4' } = {}) {
-  const i = getIntervals(musicKey, scale, startOct);
-
-  q(i[1], '0:0');
-  q(i[2], '0:1');
-  q(i[3], '0:2');
-  q(i[1], '0:3');
-
-  q(i[1], '1:0');
-  q(i[2], '1:1');
-  q(i[3], '1:2');
-  q(i[1], '1:3');
-
-  q(i[3], '2:0');
-  q(i[4], '2:1');
-  h(i[5], '2:2');
-
-  q(i[3], '3:0');
-  q(i[4], '3:1');
-  h(i[5], '3:2');
-
-  q(i[5], '4:0');
-  q(i[6], '4:1');
-  q(i[5], '4:2');
-  q(i[4], '4:3');
-
-  h(i[3], '5:0');
-  h(i[1], '5:2');
-
-  q(i[5], '6:0');
-  q(i[6], '6:1');
-  q(i[5], '6:2');
-  q(i[4], '6:3');
-
-  h(i[3], '7:0');
-  h(i[1], '7:2');
-
-  Tone.Transport.bpm.value = 120;
-  Tone.Transport.loopEnd = '8m';
-  return Tone.Transport;
+  Tone.Transport.bpm.value = bpm;
+  return {
+    play: () => {
+      Tone.Transport.start('+1');
+    }
+  };
 }
