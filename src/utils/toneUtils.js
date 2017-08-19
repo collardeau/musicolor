@@ -1,6 +1,4 @@
 import Tone from 'tone';
-import compose from 'ramda/src/compose';
-import curry from 'ramda/src/curry';
 
 // music utils
 const notesList = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
